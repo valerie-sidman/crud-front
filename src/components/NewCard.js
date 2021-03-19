@@ -12,7 +12,7 @@ export default function NewCard() {
   }
 
   const postCard = () => {
-    fetch('http://localhost:7777/posts', {
+    fetch('https://valerie-sidman-crud-back.herokuapp.com/posts', {
       method: 'POST',
       body: JSON.stringify({ "id": 0, "content": value }),
       headers: {

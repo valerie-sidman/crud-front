@@ -23,7 +23,7 @@ export default function EditCard({ match }) {
   }, [context, match.params.id]);
 
   const postCard = () => {
-    fetch('http://localhost:7777/posts', {
+    fetch('https://valerie-sidman-crud-back.herokuapp.com/posts', {
       method: 'POST',
       body: JSON.stringify({ "id": card.id, "content": card.content }),
       headers: {

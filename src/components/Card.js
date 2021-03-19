@@ -18,7 +18,7 @@ export default function Card({ match }) {
   }, [context, match.params.id]);
 
   const deleteCard = () => {
-    fetch(`http://localhost:7777/posts/${card.id}`, {
+    fetch(`https://valerie-sidman-crud-back.herokuapp.com/posts/${card.id}`, {
       method: 'DELETE',
     }).then(() => console.log('Удалили карточку'))
       .then(() => context.update())

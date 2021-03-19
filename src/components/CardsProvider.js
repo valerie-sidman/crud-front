@@ -5,7 +5,7 @@ export default function CardsProvider(props) {
   const [cards, setList] = useState([]);
 
   const getList = async () => {
-    const response = await fetch('http://localhost:7777/posts', {
+    const response = await fetch('https://valerie-sidman-crud-back.herokuapp.com/posts', {
       method: 'GET'
     });
     const responseList = await response.json();
