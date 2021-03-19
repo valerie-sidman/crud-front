@@ -1,33 +1,35 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react'
+import { Link, useHistory } from 'react-router-dom';
+import CardsContext from '../contexts/CardsContext';
 
 export default function NewCard() {
   const [value, setValue] = useState('');
-  
+  const history = useHistory();
+  const context = useContext(CardsContext);
+
   const handleChange = (event) => {
     setValue(event.target.value);
   }
 
-  const postCard = async () => {
-    console.log('click');
-    await fetch('http://localhost:7777/posts', {
+  const postCard = () => {
+    fetch('http://localhost:7777/posts', {
       method: 'POST',
-      body: JSON.stringify({"id": 0, "content": value}), 
+      body: JSON.stringify({ "id": 0, "content": value }),
       headers: {
         'Content-Type': 'application/json'
       }
-    });
-    
-    console.log('Отправили новую карточку на сервер');
+    }).then(() => console.log('Отправили новую карточку на сервер'))
+      .then(() => context.update())
+      .then(() => history.push("/"));
   }
 
   return (
     <div>
       <div className="mb-3">
-        <label htmlFor="exampleInputEmail1" className="form-label">What's new?</label>
-        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={value} onChange={handleChange}/>
+        <label htmlFor="newcard-field" className="form-label">What's new?</label>
+        <input type="text" className="form-control" id="newcard-field" value={value} onChange={handleChange} />
       </div>
-      <Link to="/" className="btn btn-success" onClick={postCard}>Add</Link>
+      <button className="btn btn-success" onClick={postCard}>Add</button>
       <Link to="/" className="btn btn-secondary">Return</Link>
     </div>
   )

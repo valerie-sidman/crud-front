@@ -1,19 +1,47 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import CardsContext from '../contexts/CardsContext';
 
-export default function EditCard() {
+export default function EditCard({ match }) {
+  const [card, setCard] = useState({});
+  const context = useContext(CardsContext);
+  const history = useHistory();
+
+  const handleChange = (event) => {
+    setCard(prevCard => ({ ...prevCard, content: event.target.value }));
+  }
+
+  useEffect(() => {
+    const findedCard = match.params.id ?
+    context.cards.find(o => o.id === Number(match.params.id)) :
+      alert('ID not found');
+    if (findedCard) {
+      setCard(findedCard);
+    } else {
+      alert('Card not found');
+    }
+  }, [context, match.params.id]);
+
+  const postCard = () => {
+    fetch('http://localhost:7777/posts', {
+      method: 'POST',
+      body: JSON.stringify({ "id": card.id, "content": card.content }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(() => console.log('Изменили карточку и отправили на сервер'))
+      .then(() => context.update())
+      .then(() => history.push("/"));
+  }
+
   return (
-    <form>
+    <div>
       <div className="mb-3">
         <label htmlFor="content-field" className="form-label">Edit your card</label>
-        <input type="text" className="form-control" id="content-field"/>
+        <input type="text" className="form-control" value={card.content || ''} id="content-field" onChange={handleChange} />
       </div>
-      <Link to="/">
-        <button type="submit" className="btn btn-info">Confirm</button>
-      </Link>
-      <Link to="/posts/card">
-        <button type="button" className="btn btn-secondary">Return</button>
-      </Link>
-    </form>
+      <button type="submit" className="btn btn-info" onClick={postCard}>Confirm</button>
+      <Link to={`/posts/${card.id}`} className="btn btn-secondary">Return</Link>
+    </div>
   )
 }
